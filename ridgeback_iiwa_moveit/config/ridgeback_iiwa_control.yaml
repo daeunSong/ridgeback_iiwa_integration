@@ -1,0 +1,256 @@
+ridgeback_joint_publisher:
+  type: "joint_state_controller/JointStateController"
+  publish_rate: 50
+
+ridgeback_velocity_controller:
+  type: "mecanum_drive_controller/MecanumDriveController"
+  front_left_wheel_joint: "front_left_wheel"
+  back_left_wheel_joint: "rear_left_wheel"
+  front_right_wheel_joint: "front_right_wheel"
+  back_right_wheel_joint: "rear_right_wheel"
+  publish_rate: 50
+  pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 0.03]
+  twist_covariance_diagonal: [0.001, 0.001, 0.001, 1000000.0, 1000000.0, 0.03]
+  cmd_vel_timeout: 0.25
+
+  # Override URDF look-up for wheel separation since the parent link is not the base_link.
+  wheel_separation_x: 0.638
+  wheel_separation_y: 0.551
+
+  # Odometry fused with IMU is published by robot_localization, so
+  # no need to publish a TF based on encoders alone.
+  enable_odom_tf: false
+
+  # Wheel separation and radius multipliers
+  wheel_separation_multiplier: 1.0 # default: 1.0
+  wheel_radius_multiplier    : 1.0 # default: 1.0
+
+  # Velocity and acceleration limits
+  # Whenever a min_* is unspecified, default to -max_*
+  linear:
+    x:
+      has_velocity_limits    : true
+      max_velocity           : 1.1   # m/s
+      has_acceleration_limits: true
+      max_acceleration       : 2.5   # m/s^2
+    y:
+      has_velocity_limits    : true
+      max_velocity           : 1.1   # m/s
+      has_acceleration_limits: true
+      max_acceleration       : 2.5   # m/s^2
+  angular:
+    z:
+      has_velocity_limits    : true
+      max_velocity           : 2.0   # rad/s
+      has_acceleration_limits: true
+      max_acceleration       : 1.0   # rad/s^2
+
+ekf_localization:
+  frequency: 50
+  two_d_mode: true
+  odom0: /ridgeback_velocity_controller/odom
+  odom0_config: [false, false, false,
+                 false, false, false,
+                 true, true, false,
+                 false, false, true,
+                 false, false, false]
+  odom0_differential: false
+  imu0: /imu/data
+  imu0_config: [false, false, false,
+                false, false, false,
+                false, false, false,
+                false, false, true,
+                true, true, false]
+  imu0_differential: false
+  odom_frame: odom
+  base_link_frame: base_link
+  world_frame: odom
+
+#iiwa:
+# Publish all joint states -----------------------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50  
+
+# Controllers for singular joint ------------------------------------
+# 
+# Effort Position Controllers ---------------------------------------
+
+# VALUES ARE NOT CORRECT !
+EffortJointInterface_J1_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_1
+  pid: {p: 800.0, i: 100, d: 80.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J2_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_2
+  pid: {p: 800.0, i: 1000, d: 100.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J3_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_3
+  pid: {p: 800.0, i: 10, d: 5.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J4_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_4
+  pid: {p: 800.0, i: 10, d: 80.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J5_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_5
+  pid: {p: 300.0, i: 5, d: 10.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J6_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_6
+  pid: {p: 50.0, i: 1, d: 1.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+EffortJointInterface_J7_controller:
+  type: effort_controllers/JointPositionController
+  joint: iiwa_joint_7
+  pid: {p: 10.0, i: 0.1, d: 1.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+# Forward Position Controllers ---------------------------------------
+PositionJointInterface_J1_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_1
+
+PositionJointInterface_J2_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_2
+  
+PositionJointInterface_J3_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_3
+  
+PositionJointInterface_J4_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_4
+  
+PositionJointInterface_J5_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_5
+  
+PositionJointInterface_J6_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_6
+  
+PositionJointInterface_J7_controller:
+  type: position_controllers/JointPositionController
+  joint: iiwa_joint_7
+  
+# Forward Velocity Controllers ---------------------------------------
+VelocityJointInterface_J1_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_1
+  
+VelocityJointInterface_J2_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_2
+  
+VelocityJointInterface_J3_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_3
+  
+VelocityJointInterface_J4_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_4
+  
+VelocityJointInterface_J5_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_5
+  
+VelocityJointInterface_J6_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_6
+  
+VelocityJointInterface_J7_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: iiwa_joint_7
+  
+  
+# Trajectory Controllers ---------------------------------------
+#   
+# Effort Position Controllers ---------------------------------------
+EffortJointInterface_trajectory_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints: 
+    - iiwa_joint_1
+    - iiwa_joint_2
+    - iiwa_joint_3
+    - iiwa_joint_4
+    - iiwa_joint_5
+    - iiwa_joint_6
+    - iiwa_joint_7
+    
+    # VALUES ARE NOT CORRECT !
+  gains:
+    iiwa_joint_1: {p: 500,  d: 30, i: 15, i_clamp: 30}
+    iiwa_joint_2: {p: 200,  d: 10, i: 10, i_clamp: 30}
+    iiwa_joint_3: {p: 65,  d: 10, i: 15, i_clamp: 30}
+    iiwa_joint_4: {p: 31,  d: 7, i: 12, i_clamp: 30}
+    iiwa_joint_5: {p: 23,  d: 3, i: 5, i_clamp: 30}
+    iiwa_joint_6: {p: 13,  d: 3, i: 3, i_clamp: 30}
+    iiwa_joint_7: {p: 17,  d: 2, i: 2.5, i_clamp: 10}
+
+  constraints:
+    goal_time: 0.5                   # Override default
+
+  state_publish_rate:  25            # Override default
+  action_monitor_rate: 30            # Override default
+  stop_trajectory_duration: 0        # Override default
+  
+# Forward Position Controllers ---------------------------------------
+PositionJointInterface_trajectory_controller:
+  type: position_controllers/JointTrajectoryController
+  joints: 
+    - iiwa_joint_1
+    - iiwa_joint_2
+    - iiwa_joint_3
+    - iiwa_joint_4
+    - iiwa_joint_5
+    - iiwa_joint_6
+    - iiwa_joint_7
+
+  constraints:
+    stopped_velocity_tolerance: 0
+    goal_time: 0.5                   # Override default
+
+  state_publish_rate:  25            # Override default
+  action_monitor_rate: 30            # Override default
+  stop_trajectory_duration: 0        # Override default
+  
+# Forward Velocity Controllers ---------------------------------------
+VelocityJointInterface_trajectory_controller:
+  type: velocity_controllers/JointTrajectoryController
+  joints: 
+    - iiwa_joint_1
+    - iiwa_joint_2
+    - iiwa_joint_3
+    - iiwa_joint_4
+    - iiwa_joint_5
+    - iiwa_joint_6
+    - iiwa_joint_7
+    
+    # VALUES ARE NOT CORRECT !
+  gains:
+    iiwa_joint_1: {p: 500,  d: 30, i: 15, i_clamp: 30}
+    iiwa_joint_2: {p: 200,  d: 10, i: 10, i_clamp: 30}
+    iiwa_joint_3: {p: 65,  d: 10, i: 15, i_clamp: 30}
+    iiwa_joint_4: {p: 31,  d: 7, i: 12, i_clamp: 30}
+    iiwa_joint_5: {p: 23,  d: 3, i: 5, i_clamp: 30}
+    iiwa_joint_6: {p: 13,  d: 3, i: 3, i_clamp: 30}
+    iiwa_joint_7: {p: 17,  d: 2, i: 2.5, i_clamp: 10}
+
+  constraints:
+    goal_time: 0.5                   # Override default
+
+  state_publish_rate:  25            # Override default
+  action_monitor_rate: 30            # Override default
+  stop_trajectory_duration: 0        # Override default
+
+
+
+

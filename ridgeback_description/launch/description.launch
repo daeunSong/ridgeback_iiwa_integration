@@ -6,5 +6,5 @@
                   $(find ridgeback_description)/urdf/configs/$(arg config)
                   $(find xacro)/xacro $(find ridgeback_description)/urdf/ridgeback.urdf.xacro
                   --inorder " />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
 </launch>
